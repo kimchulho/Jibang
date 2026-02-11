@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import jsPDF from 'jspdf';
 import { JibangData, RelationType } from './types';
 import { RELATION_HANJA } from './constants';
 import JibangForm from './components/JibangForm';
 import JibangPreview from './components/JibangPreview';
 import AiModal from './components/AiModal';
-import { ArrowDownTrayIcon, CheckCircleIcon, PhotoIcon } from '@heroicons/react/24/solid';
-import { generateHanjaImage } from './services/geminiService';
+import { ArrowDownTrayIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 
 const DEFAULT_DATA: JibangData = {
   relation: RelationType.FATHER,
@@ -17,49 +16,6 @@ const DEFAULT_DATA: JibangData = {
   // Initial Default for Father
   koreanFullText: '현고학생부군신위',
   hanjaFullText: '顯考學生府君神位' 
-};
-
-// Utility to check if a character is supported by the specific font
-// Returns true if supported, false if it likely falls back to system font
-const isCharSupported = (char: string, fontName: string): boolean => {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  if (!ctx) return true;
-
-  const size = 30;
-  canvas.width = size;
-  canvas.height = size;
-  const fallbackFont = 'sans-serif';
-
-  // 1. Render with fallback only
-  ctx.font = `${size}px ${fallbackFont}`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.clearRect(0, 0, size, size);
-  ctx.fillText(char, size/2, size/2);
-  const fallbackData = ctx.getImageData(0, 0, size, size).data;
-
-  // 2. Render with target font + fallback
-  ctx.font = `${size}px "${fontName}", ${fallbackFont}`;
-  ctx.clearRect(0, 0, size, size);
-  ctx.fillText(char, size/2, size/2);
-  const targetData = ctx.getImageData(0, 0, size, size).data;
-
-  // 3. Compare pixels
-  // If the target font supports the char, it should look different from the fallback sans-serif
-  // because ChosunGungseo is a brush style font.
-  let mismatch = 0;
-  for(let i = 0; i < fallbackData.length; i += 4) { 
-      // Compare Alpha channel mainly, but checking all helps
-      if (fallbackData[i+3] !== targetData[i+3] || 
-          fallbackData[i] !== targetData[i]) {
-          mismatch++;
-      }
-  }
-  
-  // If pixels are identical (mismatch === 0), it implies the browser used the fallback for the target request.
-  // Thus, the font is NOT supported.
-  return mismatch > 0;
 };
 
 const App: React.FC = () => {
@@ -80,11 +36,6 @@ const App: React.FC = () => {
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   
-  // State to store generated AI images for ANY unsupported char
-  // Key: Char (e.g., '妣'), Value: Base64 Image String
-  const [charImages, setCharImages] = useState<Record<string, string>>({});
-  const [loadingChars, setLoadingChars] = useState<Set<string>>(new Set());
-
   // Ref is kept for Preview UI only, not used for PDF generation anymore
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -93,77 +44,6 @@ const App: React.FC = () => {
     if (index === 0) return slot;
     return isCustom[index] ? slot : slots[0];
   });
-
-  // Effect: Scan text for unsupported characters and generate images
-  useEffect(() => {
-    const scanAndGenerate = async () => {
-      // Ensure fonts are loaded before checking support
-      await document.fonts.ready;
-
-      const charsToCheck = new Set<string>();
-      
-      effectiveSlots.forEach(slot => {
-        const text1 = slot.hanjaFullText || '';
-        const text2 = slot.hanjaFullTextSecondary || '';
-        const text3 = slot.hanjaFullTextTertiary || ''; // Include 3rd person
-        (text1 + text2 + text3).split('').forEach(c => {
-           // Filter out common whitespace/symbols if any
-           if (c.trim() && !charsToCheck.has(c)) {
-             charsToCheck.add(c);
-           }
-        });
-      });
-
-      const unsupportedChars: string[] = [];
-
-      // Identify unsupported chars
-      charsToCheck.forEach(char => {
-        // If we already have an image or are loading it, skip
-        if (charImages[char] || loadingChars.has(char)) return;
-
-        // Check font support (ChosunGungseo)
-        const supported = isCharSupported(char, 'ChosunGungseo');
-        if (!supported) {
-          unsupportedChars.push(char);
-        }
-      });
-
-      if (unsupportedChars.length > 0) {
-        // Mark as loading
-        setLoadingChars(prev => {
-          const next = new Set(prev);
-          unsupportedChars.forEach(c => next.add(c));
-          return next;
-        });
-
-        // Generate images in parallel (with simple concurrency limit implicitly by loop)
-        // For production, a queue might be better, but typically only 1-2 chars are missing.
-        unsupportedChars.forEach(async (char) => {
-          try {
-            const base64Img = await generateHanjaImage(char);
-            if (base64Img) {
-              setCharImages(prev => ({ ...prev, [char]: base64Img }));
-            }
-          } catch (e) {
-            console.error(`Failed to generate image for ${char}`, e);
-          } finally {
-            setLoadingChars(prev => {
-               const next = new Set(prev);
-               next.delete(char);
-               return next;
-            });
-          }
-        });
-      }
-    };
-
-    // Debounce slightly to avoid checking on every keystroke if typing fast
-    const timer = setTimeout(() => {
-      scanAndGenerate();
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [effectiveSlots, charImages, loadingChars]);
 
   const handleSlotChange = (newData: JibangData) => {
     const newSlots = [...slots];
@@ -235,8 +115,8 @@ const App: React.FC = () => {
       });
 
       // 2. Fetch and embed the local font for Vector support
-      // Using CDN for ChosunGungseo (matching index.html)
-      const fontUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff';
+      // Use the local file path instead of the CDN
+      const fontUrl = './ZhenZongShengDianKaiShu-2.woff';
       const response = await fetch(fontUrl);
       if (!response.ok) throw new Error('Font file not found');
       const fontBuffer = await response.arrayBuffer();
@@ -314,21 +194,7 @@ const App: React.FC = () => {
 
              for (let c = 0; c < text.length; c++) {
                  const char = text[c];
-
-                 if (charImages[char]) {
-                     // Image rendering for unsupported char
-                     const imgSize = 14; 
-                     const imgX = xPos - (imgSize / 2);
-                     const imgY = textCursorY - (imgSize / 2);
-                     try {
-                        doc.addImage(charImages[char], 'PNG', imgX, imgY, imgSize, imgSize);
-                     } catch (e) {
-                        // Fallback to text if image fails to add (unlikely if base64 is valid)
-                        doc.text(char, xPos, textCursorY, { align: 'center', baseline: 'middle' });
-                     }
-                 } else {
-                     doc.text(char, xPos, textCursorY, { align: 'center', baseline: 'middle' });
-                 }
+                 doc.text(char, xPos, textCursorY, { align: 'center', baseline: 'middle' });
                  textCursorY += charHeight;
              }
           };
@@ -391,8 +257,6 @@ const App: React.FC = () => {
     }
   };
 
-  const loadingCharCount = loadingChars.size;
-
   return (
     <div className="min-h-screen flex flex-col font-sans text-stone-900 bg-stone-100">
       {/* Header */}
@@ -407,19 +271,6 @@ const App: React.FC = () => {
              </h1>
           </div>
           <div className="flex items-center gap-4">
-             {/* Status Indicator for AI Image */}
-             {loadingCharCount > 0 && (
-                 <div className="flex items-center gap-1 text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-full animate-pulse">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    AI 글자 생성 중 ({loadingCharCount}자)...
-                 </div>
-             )}
-             {Object.keys(charImages).length > 0 && loadingCharCount === 0 && (
-                 <div className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                    <PhotoIcon className="w-3 h-3" />
-                    {Object.keys(charImages).length}자 AI 생성됨
-                 </div>
-             )}
              <div className="text-xs text-stone-500 hidden sm:block">
                 전통 제례 지방 생성 (A4 출력용)
              </div>
@@ -498,7 +349,6 @@ const App: React.FC = () => {
                  <li>A4 용지 한 장에 3개의 지방이 출력됩니다.</li>
                  <li>각 지방의 크기는 가로 6cm, 세로 22cm 입니다.</li>
                  <li>점선을 따라 오려서 사용하시면 됩니다.</li>
-                 <li>폰트에 없는 한자(예: 妣)는 AI가 자동으로 생성하여 대체합니다.</li>
                </ul>
             </div>
             
@@ -518,18 +368,13 @@ const App: React.FC = () => {
 
               <button
                 onClick={generatePDF}
-                disabled={isGenerating || loadingCharCount > 0}
+                disabled={isGenerating}
                 className="w-full bg-stone-900 text-white py-4 px-6 rounded-xl hover:bg-stone-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isGenerating ? (
                    <>
                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                      PDF 생성 중...
-                   </>
-                ) : loadingCharCount > 0 ? (
-                   <>
-                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                     AI 글자 생성 중...
                    </>
                 ) : (
                    <>
@@ -549,7 +394,6 @@ const App: React.FC = () => {
                   forwardedRef={previewRef} 
                   id="jibang-preview-sheet"
                   showOutlines={showOutlines}
-                  charImages={charImages}
                 />
             </div>
           </section>

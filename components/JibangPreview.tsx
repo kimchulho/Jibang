@@ -7,7 +7,6 @@ interface JibangPreviewProps {
   id?: string;
   forwardedRef?: React.RefObject<HTMLDivElement>;
   showOutlines?: boolean;
-  charImages?: Record<string, string>; // Key: Char, Value: Base64
 }
 
 // Helper to get relation label for footer
@@ -47,35 +46,10 @@ const getFooterLabel = (data: JibangData) => {
     return baseLabel;
 }
 
-const JibangPreview: React.FC<JibangPreviewProps> = ({ slots, id, forwardedRef, showOutlines = false, charImages = {} }) => {
+const JibangPreview: React.FC<JibangPreviewProps> = ({ slots, id, forwardedRef, showOutlines = false }) => {
   // Define font stack constant to ensure consistency
-  // GapyeongHanseokbongL is the primary font
-  const fontStack = "'GapyeongHanseokbongL', 'ChosunGungseo', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif";
-
-  const renderTextWithImageReplacement = (text: string) => {
-    return text.split('').map((char, index) => {
-      // Check if we have a generated image for this character
-      if (charImages[char]) {
-         return (
-           <img 
-             key={index} 
-             src={charImages[char]} 
-             alt={char} 
-             className="inline-block object-contain"
-             style={{ 
-                 width: '1em', 
-                 height: '1em', 
-                 // Multiply blend mode helps the white background of the generated image blend with paper
-                 mixBlendMode: 'multiply' 
-             }} 
-           />
-         );
-      }
-      
-      // Default rendering
-      return <span key={index}>{char}</span>;
-    });
-  };
+  // ChosunGungseo (Local uploaded font) should be FIRST to ensure it is used.
+  const fontStack = "'ChosunGungseo', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif";
 
   const renderColumn = (text: string, label: string) => (
       <div 
@@ -86,7 +60,9 @@ const JibangPreview: React.FC<JibangPreviewProps> = ({ slots, id, forwardedRef, 
             fontFamily: fontStack 
         }}
     >
-            {text ? renderTextWithImageReplacement(text) : (
+            {text ? (
+                text.split('').map((char, index) => <span key={index}>{char}</span>)
+            ) : (
             <span className="text-stone-300 text-sm font-sans tracking-normal rotate-90">
                 ({label})
             </span>
@@ -182,7 +158,9 @@ const JibangPreview: React.FC<JibangPreviewProps> = ({ slots, id, forwardedRef, 
                                             fontFamily: fontStack 
                                         }}
                                     >
-                                        {slot.hanjaFullText ? renderTextWithImageReplacement(slot.hanjaFullText) : (
+                                        {slot.hanjaFullText ? (
+                                            slot.hanjaFullText.split('').map((char, index) => <span key={index}>{char}</span>)
+                                        ) : (
                                             <span className="text-stone-300 text-sm font-sans tracking-normal rotate-90">
                                                 (내용 없음)
                                             </span>
