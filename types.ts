@@ -61,3 +61,28 @@ export interface ChatMessage {
   text: string;
   isError?: boolean;
 }
+
+export interface BonGwan {
+  id?: number;
+  surname: string;
+  bon_gwan: string;
+  hanja_surname: string;
+  hanja_bon_gwan: string;
+  created_at?: string;
+}
+
+export interface JibangHistory {
+  id?: number;
+  target_name: string;
+  content_ko: string;
+  content_hj: string;
+  action_type: '이미지저장' | 'PDF저장' | '바로인쇄' | 'IMG' | 'PDF' | 'PRT';
+  ip_address: string;
+  created_at?: string;
+}
+
+export interface JibangRequest {
+  target: string; // e.g., '조모'
+  surname: string; // e.g., '김'
+  bon_gwan: string; // e.g., '김해'
+}

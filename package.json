@@ -1,25 +1,41 @@
 {
-  "name": "jibang-maker-(지방-메이커)",
-  "private": true,
-  "version": "0.0.0",
+  "name": "jibang-app",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "tsx server.ts",
     "build": "vite build",
-    "preview": "vite preview"
+    "lint": "tsc --noEmit",
+    "preview": "vite preview",
+    "start": "node server.ts"
   },
   "dependencies": {
-    "react-dom": "^19.2.4",
-    "jspdf": "^2.5.1",
+    "@google/genai": "^1.44.0",
     "@heroicons/react": "^2.2.0",
-    "react": "^19.2.4",
+    "@supabase/supabase-js": "^2.99.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
     "html2canvas": "^1.4.1",
-    "@google/genai": "^1.40.0"
+    "jspdf": "^2.5.2",
+    "lucide-react": "^0.577.0",
+    "modern-screenshot": "^4.6.8",
+    "motion": "^12.35.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.22.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.0.2",
+    "vite": "^5.1.0"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1"
   }
 }

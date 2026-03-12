@@ -3,73 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jibang Maker - 지방 생성기</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prevent caching of index.html to ensure latest JS chunks are loaded -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="google-adsense-account" content="ca-pub-9880062103386476">
+    <meta name="theme-color" content="#1c1917">
+    <title>지방.앱 - 지방 쓰는 법</title>
+    
+    <!-- Favicon: Rounded dark square with 'Je' (祭) character -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%231c1917%22/><text x=%2250%22 y=%2274%22 text-anchor=%22middle%22 fill=%22%23fafaf9%22 font-family=%22%27Batang%27, %27Nanum Myeongjo%27, serif%22 font-weight=%22bold%22 font-size=%2265%22>祭</text></svg>" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-      /* User provided local font */
-      @font-face {
-          font-family: 'ChosunGungseo';
-          /* Using root-relative path to ensure correct resolution */
-          src: url('https://cdn.jsdelivr.net/gh/kimchulho/Jibang@a0c8d3ac809d5478d0b61216b89641352dd10256/ZhenZongShengDianKaiShu-2.woff') format('woff');
-          font-weight: normal;
-          font-style: normal;
-          /* 'block' ensures the text is invisible until font loads, preventing fallback capture */
-          font-display: block; 
-      }
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+    
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9880062103386476" crossorigin="anonymous"></script>
 
-      /* Custom font application */
-      body {
-        font-family: 'Noto Sans KR', sans-serif;
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+            console.log('Service Worker unregistered:', registration);
+          }
+        });
       }
-      .serif {
-        font-family: 'Nanum Myeongjo', serif;
-      }
-      /* Priority: ChosunGungseo (Web), Gungseo (Windows), GungSeo (Mac), Batang, etc. */
-      .gungseo {
-        font-family: 'ChosunGungseo', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif !important;
-      }
-      .vertical-text {
-        writing-mode: vertical-rl;
-        text-orientation: upright;
-        letter-spacing: 0.1em; /* Adjusted for better density in 22cm height */
-      }
-      /* Print specific styles */
-      @media print {
-        body {
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-      }
-      
-      /* Texture pattern without external image to prevent errors */
-      .paper-texture {
-        background-color: #ffffff;
-        background-image: 
-          linear-gradient(45deg, #fdfbf7 25%, transparent 25%, transparent 75%, #fdfbf7 75%, #fdfbf7),
-          linear-gradient(45deg, #fdfbf7 25%, transparent 25%, transparent 75%, #fdfbf7 75%, #fdfbf7);
-        background-size: 60px 60px;
-        background-position: 0 0, 30px 30px;
-        opacity: 0.5;
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "jspdf": "https://esm.sh/jspdf@^2.5.1",
-    "@heroicons/react/": "https://esm.sh/@heroicons/react@^2.2.0/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "html2canvas": "https://esm.sh/html2canvas@^1.4.1",
-    "@google/genai": "https://esm.sh/@google/genai@^1.40.0"
-  }
-}
-</script>
-</head>
+    </script>
+  </head>
   <body class="bg-stone-100 text-stone-900 antialiased selection:bg-stone-300">
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

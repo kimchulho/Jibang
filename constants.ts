@@ -11,23 +11,29 @@ export const JIBANG_CONSTANTS = {
 };
 
 // Mapping relations to their Hanja representation
-// For couples, we define the base logic. The specific text generation is handled in JibangForm.
+// The order here determines the order in the dropdown menu.
 export const RELATION_HANJA: Record<RelationType, { label: string; hanja: string; gender: 'M' | 'F' | 'COUPLE' }> = {
+  // 1. Parents
   [RelationType.FATHER]: { label: '아버지 (부)', hanja: '고', gender: 'M' },
   [RelationType.MOTHER]: { label: '어머니 (모)', hanja: '비', gender: 'F' },
+  [RelationType.COUPLE_PARENTS]: { label: '부모님 (부부 합설)', hanja: '고/비', gender: 'COUPLE' },
+
+  // 2. Grandparents
   [RelationType.GRANDFATHER]: { label: '할아버지 (조부)', hanja: '조고', gender: 'M' },
   [RelationType.GRANDMOTHER]: { label: '할머니 (조모)', hanja: '조비', gender: 'F' },
+  [RelationType.COUPLE_GRANDPARENTS]: { label: '조부모님 (부부 합설)', hanja: '조고/조비', gender: 'COUPLE' },
+
+  // 3. Great-Grandparents
   [RelationType.GREAT_GRANDFATHER]: { label: '증조할아버지 (증조부)', hanja: '증조고', gender: 'M' },
   [RelationType.GREAT_GRANDMOTHER]: { label: '증조할머니 (증조모)', hanja: '증조비', gender: 'F' },
+  [RelationType.COUPLE_GREAT_GRANDPARENTS]: { label: '증조부모님 (부부 합설)', hanja: '증조고/증조비', gender: 'COUPLE' },
+
+  // 4. Great-Great-Grandparents
   [RelationType.GREAT_GREAT_GRANDFATHER]: { label: '고조할아버지 (고조부)', hanja: '고조고', gender: 'M' },
   [RelationType.GREAT_GREAT_GRANDMOTHER]: { label: '고조할머니 (고조모)', hanja: '고조비', gender: 'F' },
-  
-  // Couple Relations
-  [RelationType.COUPLE_PARENTS]: { label: '부모님 (부부 합설)', hanja: '고/비', gender: 'COUPLE' },
-  [RelationType.COUPLE_GRANDPARENTS]: { label: '조부모님 (부부 합설)', hanja: '조고/조비', gender: 'COUPLE' },
-  [RelationType.COUPLE_GREAT_GRANDPARENTS]: { label: '증조부모님 (부부 합설)', hanja: '증조고/증조비', gender: 'COUPLE' },
   [RelationType.COUPLE_GREAT_GREAT_GRANDPARENTS]: { label: '고조부모님 (부부 합설)', hanja: '고조고/고조비', gender: 'COUPLE' },
 
+  // 5. Spouse & Children & Custom
   [RelationType.HUSBAND]: { label: '남편 (부)', hanja: '벽', gender: 'M' }, 
   [RelationType.WIFE]: { label: '아내 (처)', hanja: '', gender: 'F' }, 
   [RelationType.SON]: { label: '아들 (자)', hanja: '', gender: 'M' },
@@ -52,3 +58,25 @@ export const COMMON_NAMES = [
   { kor: '최', hanja: '崔' },
   { kor: '정', hanja: '鄭' },
 ];
+
+export const FIXED_HANJA_TEMPLATES: Record<string, string> = {
+  // Males (Fixed)
+  [RelationType.FATHER]: '顯考學生府君神位',
+  [RelationType.GRANDFATHER]: '顯祖考學生府君神位',
+  [RelationType.GREAT_GRANDFATHER]: '顯曾祖考學生府君神位',
+  [RelationType.GREAT_GREAT_GRANDFATHER]: '顯高祖考學生府君神位',
+  [RelationType.HUSBAND]: '顯辟學生府君神位',
+
+  // Females (Templates with placeholders)
+  // {CLAN} = Bon-gwan (e.g., Kimhae), {SURNAME} = Family Name (e.g., Kim)
+  [RelationType.MOTHER]: '顯妣孺人{CLAN}{SURNAME}氏神位',
+  [RelationType.GRANDMOTHER]: '顯祖妣孺人{CLAN}{SURNAME}氏神位',
+  [RelationType.GREAT_GRANDMOTHER]: '顯曾祖妣孺人{CLAN}{SURNAME}氏神位',
+  [RelationType.GREAT_GREAT_GRANDMOTHER]: '顯高祖妣孺人{CLAN}{SURNAME}氏神位',
+  [RelationType.WIFE]: '亡室孺人{CLAN}{SURNAME}氏神位',
+
+  // Children
+  // {NAME} = Name
+  [RelationType.SON]: '亡子秀才{NAME}之靈',
+  [RelationType.DAUGHTER]: '亡女秀才{NAME}之靈',
+};

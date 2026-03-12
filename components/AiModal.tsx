@@ -8,6 +8,76 @@ interface AiModalProps {
   onClose: () => void;
 }
 
+// Helper to parse bold syntax (**text**)
+const parseBold = (text: string) => {
+  return text.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index} className="font-bold">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
+
+// Markdown Formatter Component
+const FormattedMessage = ({ text }: { text: string }) => {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+
+  return (
+    <div className="space-y-1">
+      {lines.map((line, i) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={i} className="h-2" />;
+
+        // Headers
+        if (trimmed.startsWith('### ')) {
+          return <h3 key={i} className="text-base font-bold mt-3 mb-1 text-inherit">{parseBold(trimmed.slice(4))}</h3>;
+        }
+        if (trimmed.startsWith('## ')) {
+          return <h2 key={i} className="text-lg font-bold mt-4 mb-2 text-inherit">{parseBold(trimmed.slice(3))}</h2>;
+        }
+        if (trimmed.startsWith('# ')) {
+           return <h1 key={i} className="text-xl font-bold mt-4 mb-2 text-inherit">{parseBold(trimmed.slice(2))}</h1>;
+        }
+
+        // Bullet points (Updated for better alignment)
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+             return (
+                 <div key={i} className="flex items-start gap-2.5 pl-1 mb-0.5">
+                     {/* Use CSS shape instead of text char for better alignment */}
+                     <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-current opacity-60 mt-[0.55rem]" />
+                     <div className="flex-1 leading-relaxed break-words text-inherit">
+                        {parseBold(trimmed.slice(2))}
+                     </div>
+                 </div>
+             )
+        }
+        
+        // Ordered lists (1. )
+        if (/^\d+\.\s/.test(trimmed)) {
+             const dotIndex = trimmed.indexOf('.');
+             const num = trimmed.slice(0, dotIndex + 1);
+             const content = trimmed.slice(dotIndex + 1).trim();
+             return (
+                 <div key={i} className="flex items-start gap-2 pl-1 mb-0.5">
+                     <span className="font-semibold text-inherit min-w-[1.2rem] text-right tabular-nums flex-shrink-0 leading-relaxed">{num}</span>
+                     <div className="flex-1 leading-relaxed break-words text-inherit">{parseBold(content)}</div>
+                 </div>
+             )
+        }
+
+        // Normal paragraph
+        return (
+          <p key={i} className="min-h-[1.2em] leading-relaxed break-words">
+            {parseBold(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
 const AiModal: React.FC<AiModalProps> = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: 'model', text: '안녕하세요. 지방 작성이나 본관 한자에 대해 궁금한 점이 있으신가요?' }
@@ -60,13 +130,13 @@ const AiModal: React.FC<AiModalProps> = ({ isOpen, onClose }) => {
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm leading-relaxed ${
+                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm shadow-sm overflow-hidden ${
                   msg.role === 'user'
                     ? 'bg-stone-800 text-white rounded-tr-none'
-                    : 'bg-white border border-stone-200 text-stone-800 rounded-tl-none shadow-sm'
+                    : 'bg-white border border-stone-200 text-stone-800 rounded-tl-none'
                 }`}
               >
-                {msg.text}
+                <FormattedMessage text={msg.text} />
               </div>
             </div>
           ))}
