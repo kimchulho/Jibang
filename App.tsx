@@ -3,20 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { Bars3Icon, XMarkIcon, HomeIcon, BookOpenIcon, QuestionMarkCircleIcon, DocumentTextIcon, ShareIcon } from '@heroicons/react/24/outline';
 import JibangGenerator from './components/JibangGenerator';
 import { AboutPage, GuidePage, FaqPage } from './pages/StaticPages';
-import { getTotalJibangCount } from './services/jibangService';
 
 const AppContent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [totalCount, setTotalCount] = useState<number | null>(null);
   const location = useLocation();
-
-  useEffect(() => {
-    const fetchCount = async () => {
-      const count = await getTotalJibangCount();
-      setTotalCount(count);
-    };
-    fetchCount();
-  }, []);
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -57,17 +47,6 @@ const AppContent: React.FC = () => {
              <h1 className="text-xl font-bold tracking-tight text-stone-900">
                지방앱
              </h1>
-             {totalCount !== null && (
-               <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 bg-stone-100 rounded-full border border-stone-200">
-                 <span className="relative flex h-2 w-2">
-                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                 </span>
-                 <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
-                   {totalCount.toLocaleString()}개 생성됨
-                 </span>
-               </div>
-             )}
           </Link>
 
           {/* Desktop Nav */}

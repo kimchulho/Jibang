@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import jsPDF from 'jspdf';
 import { domToPng } from 'modern-screenshot';
 import { JibangData, RelationType } from '../types';
 import { RELATION_HANJA } from '../constants';
-import { saveJibangHistory, getClientIp } from '../services/jibangService';
+import { saveJibangHistory, getClientIp, getTotalJibangCount } from '../services/jibangService';
 import JibangForm from './JibangForm';
 import JibangPreview from './JibangPreview';
 import AiModal from './AiModal';
@@ -43,9 +43,18 @@ const JibangGenerator: React.FC = () => {
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [isImageGenerating, setIsImageGenerating] = useState(false);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   
   const previewRef = useRef<HTMLDivElement>(null);
   const captureRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const count = await getTotalJibangCount();
+      setTotalCount(count);
+    };
+    fetchCount();
+  }, []);
 
   const effectiveSlots = slots.map((slot, index) => {
     if (index === 0) return slot;
@@ -561,6 +570,14 @@ const JibangGenerator: React.FC = () => {
             {/*<p className="text-[10px] text-stone-400 mt-2 text-right">
                 * 위 광고는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
             </p>*/}
+
+            {totalCount !== null && (
+                <div className="mt-4 p-3 bg-stone-50 rounded-xl border border-stone-200 text-center animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <p className="text-xs text-stone-500 font-medium">
+                        지금까지 <span className="text-stone-900 font-bold">총 {totalCount.toLocaleString()}개</span> 지방을 만들어 드렸어요.
+                    </p>
+                </div>
+            )}
 
           </section>
 
