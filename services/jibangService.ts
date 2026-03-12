@@ -4,15 +4,23 @@ import { BonGwan, JibangHistory } from '../types';
 
 export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promise<BonGwan> => {
   // 1. Search in DB
-  const { data, error } = await supabase
-    .from('jibang_bon_gwan')
-    .select('*')
-    .eq('surname', surname)
-    .eq('bon_gwan', bon_gwan)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('jibang_bon_gwan')
+      .select('*')
+      .eq('surname', surname)
+      .eq('bon_gwan', bon_gwan)
+      .single();
 
-  if (data) {
-    return data;
+    if (data) {
+      return data;
+    }
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows found"
+      console.error('Supabase query error (jibang_bon_gwan):', error);
+    }
+  } catch (err) {
+    console.error('Unexpected error during BonGwan DB search:', err);
   }
 
   // 2. If not found, use AI
@@ -27,27 +35,36 @@ export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promis
     hanja_bon_gwan: aiResult.hanja_bon_gwan,
   };
 
-  const { data: insertedData, error: insertError } = await supabase
-    .from('jibang_bon_gwan')
-    .insert([newBonGwan])
-    .select()
-    .single();
+  try {
+    const { data: insertedData, error: insertError } = await supabase
+      .from('jibang_bon_gwan')
+      .insert([newBonGwan])
+      .select()
+      .single();
 
-  if (insertError) {
-    console.error('Error inserting BonGwan:', insertError);
-    return newBonGwan; // Return anyway if insertion fails
+    if (insertError) {
+      console.error('Error inserting BonGwan into DB:', insertError);
+      return newBonGwan; // Return anyway if insertion fails
+    }
+
+    return insertedData;
+  } catch (err) {
+    console.error('Unexpected error during BonGwan DB insertion:', err);
+    return newBonGwan;
   }
-
-  return insertedData;
 };
 
 export const saveJibangHistory = async (history: Omit<JibangHistory, 'id' | 'created_at'>) => {
-  const { error } = await supabase
-    .from('jibang_history')
-    .insert([history]);
+  try {
+    const { error } = await supabase
+      .from('jibang_history')
+      .insert([history]);
 
-  if (error) {
-    console.error('Error saving history:', error);
+    if (error) {
+      console.error('Error saving history to Supabase (jibang_history):', error);
+    }
+  } catch (err) {
+    console.error('Unexpected error during history saving:', err);
   }
 };
 
