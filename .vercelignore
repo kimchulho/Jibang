@@ -1,0 +1,5 @@
+node_modules
+dist
+.env
+supabase_schema.sql
+check_env.ts

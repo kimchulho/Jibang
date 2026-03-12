@@ -17,6 +17,16 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
+      sourcemap: false,
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            utils: ['html2canvas', 'jspdf', 'modern-screenshot', 'motion'],
+          },
+        },
+      },
     },
     server: {
       port: 3000,
