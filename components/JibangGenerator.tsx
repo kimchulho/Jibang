@@ -207,7 +207,7 @@ const JibangGenerator: React.FC = () => {
         format: 'a4'
       });
 
-      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.woff';
+      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.ttf';
       const paperlogyBoldUrl = '/fonts/Paperlogy-7Bold.ttf';
       const paperlogyRegUrl = '/fonts/Paperlogy-4Regular.ttf';
 
