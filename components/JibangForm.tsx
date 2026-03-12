@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { JibangData, RelationType } from '../types';
 import { RELATION_HANJA, JIBANG_CONSTANTS, FIXED_HANJA_TEMPLATES } from '../constants';
 import { convertJibangToHanja, convertToHanja } from '../services/geminiService';
+import { getBonGwanHanja } from '../services/jibangService';
 import { supabase } from '../services/supabaseClient';
 import { ArrowPathIcon, SparklesIcon, PlusCircleIcon, MinusCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
@@ -186,53 +187,13 @@ const JibangForm: React.FC<JibangFormProps> = ({ data, onChange, onOpenAiHelp })
   const getHanjaForClan = async (clan: string, familyName: string) => {
       if (!clan || !familyName) return { clanHanja: 'OO', familyHanja: 'O' };
 
-      // 1. DB에서 우선 검색
-      if (supabase) {
-          const { data: existingData, error } = await supabase
-              .from('jibang_surnames')
-              .select('hanja')
-              .eq('bon_gwan', clan)
-              .eq('surname', familyName)
-              .maybeSingle();
-          
-          if (existingData) {
-              // DB에 있는 경우 바로 사용
-              const hanja = existingData.hanja;
-              const parts = hanja.split(' '); // 보통 '金海 金' 형태로 저장하거나 '金海金氏'로 저장
-              // '金海金氏' 형태인 경우 분리 로직 필요. 여기서는 AI가 생성한 형식을 따름.
-              if (hanja.endsWith('氏')) {
-                  // '金海金氏' -> '金海' (clan), '金' (family)
-                  const clanPart = hanja.substring(0, hanja.length - familyName.length - 1);
-                  const familyPart = hanja.substring(hanja.length - familyName.length - 1, hanja.length - 1);
-                  return { clanHanja: clanPart, familyHanja: familyPart };
-              }
-              return { clanHanja: parts[0] || 'OO', familyHanja: parts[1] || 'O' };
-          }
-      }
-
-      // 2. DB에 없는 경우 AI로 생성
-      const hanja = await convertToHanja(`${clan} ${familyName}씨`);
+      // DB 검색 및 AI 생성은 getBonGwanHanja 서비스에서 처리합니다.
+      const bonGwanData = await getBonGwanHanja(familyName, clan);
       
-      // 3. 생성된 결과를 DB에 등록
-      if (supabase && hanja) {
-          await supabase.from('jibang_surnames').insert([
-              { 
-                  bon_gwan: clan, 
-                  surname: familyName, 
-                  hanja: hanja 
-              }
-          ]);
-      }
-      
-      const parts = hanja.split(' ');
-      // AI 응답이 '金海 金' 형태라고 가정 (convertToHanja의 프롬프트에 따라 다름)
-      // 만약 '金海金氏' 형태라면 위와 같은 분리 로직 적용
-      if (hanja.endsWith('氏')) {
-          const clanPart = hanja.substring(0, hanja.length - familyName.length - 1);
-          const familyPart = hanja.substring(hanja.length - familyName.length - 1, hanja.length - 1);
-          return { clanHanja: clanPart, familyHanja: familyPart };
-      }
-      return { clanHanja: parts[0] || 'OO', familyHanja: parts[1] || 'O' };
+      return { 
+          clanHanja: bonGwanData.hanja_bon_gwan || 'OO', 
+          familyHanja: bonGwanData.hanja_surname || 'O' 
+      };
   };
 
   const getTargetRelation = (field: 'primary' | 'secondary' | 'tertiary'): RelationType => {
