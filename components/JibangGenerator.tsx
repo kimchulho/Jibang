@@ -207,9 +207,9 @@ const JibangGenerator: React.FC = () => {
         format: 'a4'
       });
 
-      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.ttf';
-      const paperlogyBoldUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2';
-      const paperlogyRegUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2';
+      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.woff';
+      const paperlogyBoldUrl = '/fonts/Paperlogy-7Bold.ttf';
+      const paperlogyRegUrl = '/fonts/Paperlogy-4Regular.ttf';
 
       let hanjaData = '';
       let paperlogyBoldData = '';
@@ -236,8 +236,8 @@ const JibangGenerator: React.FC = () => {
          hanjaData = bufferToBinaryString(await hanjaRes.arrayBuffer());
          console.log("Hanja font fetched successfully, size:", hanjaData.length);
          
-         doc.addFileToVFS('ChosunGungseo.ttf', hanjaData);
-         doc.addFont('ChosunGungseo.ttf', 'ChosunGungseo', 'normal');
+         doc.addFileToVFS('ZhenZongShengDianKaiShu-2.ttf', btoa(hanjaData));
+         doc.addFont('ZhenZongShengDianKaiShu-2.ttf', 'ZhenZongShengDianKaiShu-2', 'normal');
       } catch (e) {
          console.error("Hanja font error:", e);
          throw new Error("필수 붓글씨 폰트(한자)를 불러오지 못했습니다. 네트워크를 확인해주세요.");
@@ -255,11 +255,11 @@ const JibangGenerator: React.FC = () => {
              paperlogyRegData = bufferToBinaryString(await regRes.arrayBuffer());
              console.log("Paperlogy fonts fetched successfully");
              
-             doc.addFileToVFS('PaperlogyBold.woff2', paperlogyBoldData);
-             doc.addFont('PaperlogyBold.woff2', 'PaperlogyBold', 'bold');
+             doc.addFileToVFS('Paperlogy-7Bold.ttf', btoa(paperlogyBoldData));
+             doc.addFont('Paperlogy-7Bold.ttf', 'Paperlogy-7Bold', 'bold');
              
-             doc.addFileToVFS('PaperlogyRegular.woff2', paperlogyRegData);
-             doc.addFont('PaperlogyRegular.woff2', 'PaperlogyRegular', 'normal');
+             doc.addFileToVFS('Paperlogy-4Regular.ttf', btoa(paperlogyRegData));
+             doc.addFont('Paperlogy-4Regular.ttf', 'Paperlogy-4Regular', 'normal');
              
              hangulFontAvailable = true;
          } else {
@@ -308,7 +308,7 @@ const JibangGenerator: React.FC = () => {
 
           const renderVerticalLine = (text: string, xPos: number) => {
              if (!text) return;
-             doc.setFont('ChosunGungseo', 'normal');
+             doc.setFont('ZhenZongShengDianKaiShu-2', 'normal');
              doc.setFontSize(36); 
              doc.setTextColor(0, 0, 0); 
 
@@ -360,20 +360,20 @@ const JibangGenerator: React.FC = () => {
           doc.setTextColor(0, 0, 0);
 
           if (hangulFontAvailable) {
-              doc.setFont('PaperlogyBold', 'bold');
+              doc.setFont('Paperlogy-7Bold', 'bold');
               doc.setFontSize(14);
           } else {
-              doc.setFont('ChosunGungseo', 'normal');
+              doc.setFont('ZhenZongShengDianKaiShu-2', 'normal');
               doc.setFontSize(12);
           }
           doc.text(title, centerX, footerY + 5, { align: 'center' });
 
           if (hangulFontAvailable) {
-              doc.setFont('PaperlogyRegular', 'normal');
+              doc.setFont('Paperlogy-4Regular', 'normal');
               doc.setFontSize(10);
               doc.setTextColor(60, 60, 60);
           } else {
-              doc.setFont('ChosunGungseo', 'normal');
+              doc.setFont('ZhenZongShengDianKaiShu-2', 'normal');
               doc.setFontSize(10);
           }
 

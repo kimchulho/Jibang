@@ -1,5 +1,5 @@
 -- 여성의 본관성씨를 DB화하여 관리하는 테이블
-CREATE TABLE IF NOT EXISTS jibang_bon_gwan (
+CREATE TABLE IF NOT EXISTS jibang_surnames (
     id BIGSERIAL PRIMARY KEY,
     surname TEXT NOT NULL, -- 성씨 (예: 김)
     bon_gwan TEXT NOT NULL, -- 본관 (예: 김해)
@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS jibang_history (
 );
 
 -- 인덱스 추가 (검색 성능 향상)
-CREATE INDEX IF NOT EXISTS idx_jibang_bon_gwan_surname_bon_gwan ON jibang_bon_gwan(surname, bon_gwan);
+CREATE INDEX IF NOT EXISTS idx_jibang_surnames_surname_bon_gwan ON jibang_surnames(surname, bon_gwan);

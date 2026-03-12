@@ -6,7 +6,7 @@ export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promis
   // 1. Search in DB
   try {
     const { data, error } = await supabase
-      .from('jibang_bon_gwan')
+      .from('jibang_surnames')
       .select('*')
       .eq('surname', surname)
       .eq('bon_gwan', bon_gwan)
@@ -17,7 +17,7 @@ export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promis
     }
 
     if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows found"
-      console.error('Supabase query error (jibang_bon_gwan):', error);
+      console.error('Supabase query error (jibang_surnames):', error);
     }
   } catch (err) {
     console.error('Unexpected error during BonGwan DB search:', err);
@@ -37,7 +37,7 @@ export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promis
 
   try {
     const { data: insertedData, error: insertError } = await supabase
-      .from('jibang_bon_gwan')
+      .from('jibang_surnames')
       .insert([newBonGwan])
       .select()
       .single();

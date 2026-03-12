@@ -78,8 +78,8 @@ const renderFooterLabel = (data: JibangData) => {
 
 const JibangPreview: React.FC<JibangPreviewProps> = ({ slots, id, forwardedRef, showOutlines = false, showCropMarks = true, isForCapture = false }) => {
   // Define font stack constant to ensure consistency
-  // ChosunGungseo (Local uploaded font) should be FIRST to ensure it is used.
-  const fontStack = "'ChosunGungseo', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif";
+  // ZhenZongShengDianKaiShu-2 (Local uploaded font) should be FIRST to ensure it is used.
+  const fontStack = "'ZhenZongShengDianKaiShu-2', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif";
 
   // Configuration for matching PDF layout exactly during capture/print
   // PDF Font Size: 36pt

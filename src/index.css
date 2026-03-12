@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
-/* User provided local font: ChosunGungseo (Hanja/Main Text) */
+/* User provided local font: ZhenZongShengDianKaiShu-2 (Hanja/Main Text) */
 @font-face {
-    font-family: 'ChosunGungseo';
-    src: url('/fonts/ZhenZongShengDianKaiShu-2.ttf') format('truetype');
+    font-family: 'ZhenZongShengDianKaiShu-2';
+    src: url('/fonts/ZhenZongShengDianKaiShu-2.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: block; 
 }
 
-/* Paperlogy Font (Footer Text) - Web Font (Noonnu) */
+/* Paperlogy Font (Footer Text) - Local Font */
 /* Regular (Weight 400) */
 @font-face {
     font-family: 'Paperlogy';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+    src: url('/fonts/Paperlogy-4Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -21,7 +21,7 @@
 /* Bold (Weight 700) */
 @font-face {
     font-family: 'Paperlogy';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+    src: url('/fonts/Paperlogy-7Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -38,9 +38,9 @@ body {
   font-family: 'Paperlogy', sans-serif;
 }
 
-/* Priority: ChosunGungseo (Web), Gungseo (Windows), GungSeo (Mac), Batang, etc. */
+/* Priority: ZhenZongShengDianKaiShu-2 (Web), Gungseo (Windows), GungSeo (Mac), Batang, etc. */
 .gungseo {
-  font-family: 'ChosunGungseo', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif !important;
+  font-family: 'ZhenZongShengDianKaiShu-2', 'Gungseo', 'GungSeo', 'Batang', 'BatangChe', 'Nanum Myeongjo', serif !important;
 }
 .vertical-text {
   writing-mode: vertical-rl;
