@@ -207,9 +207,9 @@ const JibangGenerator: React.FC = () => {
         format: 'a4'
       });
 
-      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.ttf';
-      const paperlogyBoldUrl = '/fonts/Paperlogy-7Bold.ttf';
-      const paperlogyRegUrl = '/fonts/Paperlogy-4Regular.ttf';
+      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.woff';
+      const paperlogyBoldUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2';
+      const paperlogyRegUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2';
 
       let hanjaData = '';
       let paperlogyBoldData = '';
@@ -236,8 +236,8 @@ const JibangGenerator: React.FC = () => {
          hanjaData = bufferToBinaryString(await hanjaRes.arrayBuffer());
          console.log("Hanja font fetched successfully, size:", hanjaData.length);
          
-         doc.addFileToVFS('ChosunGungseo.ttf', hanjaData);
-         doc.addFont('ChosunGungseo.ttf', 'ChosunGungseo', 'normal');
+         doc.addFileToVFS('ChosunGungseo.woff', hanjaData);
+         doc.addFont('ChosunGungseo.woff', 'ChosunGungseo', 'normal');
       } catch (e) {
          console.error("Hanja font error:", e);
          throw new Error("필수 붓글씨 폰트(한자)를 불러오지 못했습니다. 네트워크를 확인해주세요.");
@@ -255,11 +255,11 @@ const JibangGenerator: React.FC = () => {
              paperlogyRegData = bufferToBinaryString(await regRes.arrayBuffer());
              console.log("Paperlogy fonts fetched successfully");
              
-             doc.addFileToVFS('PaperlogyBold.ttf', paperlogyBoldData);
-             doc.addFont('PaperlogyBold.ttf', 'PaperlogyBold', 'bold');
+             doc.addFileToVFS('PaperlogyBold.woff2', paperlogyBoldData);
+             doc.addFont('PaperlogyBold.woff2', 'PaperlogyBold', 'bold');
              
-             doc.addFileToVFS('PaperlogyRegular.ttf', paperlogyRegData);
-             doc.addFont('PaperlogyRegular.ttf', 'PaperlogyRegular', 'normal');
+             doc.addFileToVFS('PaperlogyRegular.woff2', paperlogyRegData);
+             doc.addFont('PaperlogyRegular.woff2', 'PaperlogyRegular', 'normal');
              
              hangulFontAvailable = true;
          } else {
