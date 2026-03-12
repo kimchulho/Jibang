@@ -207,7 +207,7 @@ const JibangGenerator: React.FC = () => {
         format: 'a4'
       });
 
-      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.woff';
+      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.ttf';
       const paperlogyBoldUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2';
       const paperlogyRegUrl = 'https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2';
 
@@ -236,8 +236,8 @@ const JibangGenerator: React.FC = () => {
          hanjaData = bufferToBinaryString(await hanjaRes.arrayBuffer());
          console.log("Hanja font fetched successfully, size:", hanjaData.length);
          
-         doc.addFileToVFS('ChosunGungseo.woff', hanjaData);
-         doc.addFont('ChosunGungseo.woff', 'ChosunGungseo', 'normal');
+         doc.addFileToVFS('ChosunGungseo.ttf', hanjaData);
+         doc.addFont('ChosunGungseo.ttf', 'ChosunGungseo', 'normal');
       } catch (e) {
          console.error("Hanja font error:", e);
          throw new Error("필수 붓글씨 폰트(한자)를 불러오지 못했습니다. 네트워크를 확인해주세요.");
