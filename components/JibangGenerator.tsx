@@ -207,9 +207,9 @@ const JibangGenerator: React.FC = () => {
         format: 'a4'
       });
 
-      const hanjaFontUrl = 'https://cdn.jsdelivr.net/gh/kimchulho/Jibang@main/font/ZhenZongShengDianKaiShu-2.ttf';
-      const paperlogyBoldUrl = 'https://cdn.jsdelivr.net/gh/kimchulho/Jibang@main/font/Paperlogy-7Bold.ttf';
-      const paperlogyRegUrl = 'https://cdn.jsdelivr.net/gh/kimchulho/Jibang@main/font/Paperlogy-4Regular.ttf';
+      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.ttf';
+      const paperlogyBoldUrl = '/fonts/Paperlogy-7Bold.ttf';
+      const paperlogyRegUrl = '/fonts/Paperlogy-4Regular.ttf';
 
       let hanjaData = '';
       let paperlogyBoldData = '';
@@ -230,17 +230,21 @@ const JibangGenerator: React.FC = () => {
       };
 
       try {
+         console.log("Fetching Hanja font from:", hanjaFontUrl);
          const hanjaRes = await fetch(hanjaFontUrl);
-         if (!hanjaRes.ok) throw new Error("Hanja Font Fetch Failed");
+         if (!hanjaRes.ok) throw new Error(`Hanja Font Fetch Failed: ${hanjaRes.status}`);
          hanjaData = bufferToBinaryString(await hanjaRes.arrayBuffer());
+         console.log("Hanja font fetched successfully, size:", hanjaData.length);
          
          doc.addFileToVFS('ChosunGungseo.ttf', hanjaData);
          doc.addFont('ChosunGungseo.ttf', 'ChosunGungseo', 'normal');
       } catch (e) {
+         console.error("Hanja font error:", e);
          throw new Error("필수 붓글씨 폰트(한자)를 불러오지 못했습니다. 네트워크를 확인해주세요.");
       }
 
       try {
+         console.log("Fetching Paperlogy fonts...");
          const [boldRes, regRes] = await Promise.all([
              fetch(paperlogyBoldUrl),
              fetch(paperlogyRegUrl)
@@ -249,6 +253,7 @@ const JibangGenerator: React.FC = () => {
          if (boldRes.ok && regRes.ok) {
              paperlogyBoldData = bufferToBinaryString(await boldRes.arrayBuffer());
              paperlogyRegData = bufferToBinaryString(await regRes.arrayBuffer());
+             console.log("Paperlogy fonts fetched successfully");
              
              doc.addFileToVFS('PaperlogyBold.ttf', paperlogyBoldData);
              doc.addFont('PaperlogyBold.ttf', 'PaperlogyBold', 'bold');
@@ -258,10 +263,10 @@ const JibangGenerator: React.FC = () => {
              
              hangulFontAvailable = true;
          } else {
-             console.warn("Paperlogy font fetch failed, falling back to ChosunGungseo");
+             console.warn("Paperlogy font fetch failed", boldRes.status, regRes.status);
          }
       } catch (e) {
-         console.warn("Paperlogy font fetch error, falling back to ChosunGungseo", e);
+         console.warn("Paperlogy font fetch error", e);
       }
 
       const pageWidth = 210;
