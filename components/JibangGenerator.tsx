@@ -211,8 +211,8 @@ const JibangGenerator: React.FC = () => {
       });
 
       const hanjaFontUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/ZhenZongShengDianKaiShu-2.ttf';
-      const paperlogyBoldUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/Paperlogy-7Bold.ttf';
-      const paperlogyRegUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/Paperlogy-4Regular.ttf';
+      const paperlogyBoldUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/Paperlogy-7Bold.ttf?v=2';
+      const paperlogyRegUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/Paperlogy-4Regular.ttf?v=2';
 
       let hanjaData = '';
       let paperlogyBoldData = '';
