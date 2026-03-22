@@ -144,15 +144,18 @@ const JibangGenerator: React.FC = () => {
               }
           });
 
-          await Promise.all(Array.from(uniqueSlotsMap.values()).map(slot => 
-              saveJibangHistory({
+          await Promise.all(Array.from(uniqueSlotsMap.values()).map(slot => {
+              const koParts = [slot.koreanFullText, slot.koreanFullTextSecondary, slot.koreanFullTextTertiary].filter(Boolean);
+              const hjParts = [slot.hanjaFullText, slot.hanjaFullTextSecondary, slot.hanjaFullTextTertiary].filter(Boolean);
+              
+              return saveJibangHistory({
                   target_name: RELATION_HANJA[slot.relation].label,
-                  content_ko: slot.koreanFullText || '',
-                  content_hj: slot.hanjaFullText || '',
+                  content_ko: koParts.join(', '),
+                  content_hj: hjParts.join(', '),
                   action_type: actionType,
                   ip_address: ip
-              })
-          ));
+              });
+          }));
       } catch (error) {
           console.error("History tracking failed", error);
       }
@@ -207,9 +210,9 @@ const JibangGenerator: React.FC = () => {
         format: 'a4'
       });
 
-      const hanjaFontUrl = '/fonts/ZhenZongShengDianKaiShu-2.ttf';
-      const paperlogyBoldUrl = '/fonts/Paperlogy-7Bold.ttf';
-      const paperlogyRegUrl = '/fonts/Paperlogy-4Regular.ttf';
+      const hanjaFontUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/ZhenZongShengDianKaiShu-2.ttf';
+      const paperlogyBoldUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/Paperlogy-7Bold.ttf';
+      const paperlogyRegUrl = 'https://ewbjogsolylcbfmpmyfa.supabase.co/storage/v1/object/public/jibang/Paperlogy-4Regular.ttf';
 
       let hanjaData = '';
       let paperlogyBoldData = '';

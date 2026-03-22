@@ -254,6 +254,7 @@ const JibangForm: React.FC<JibangFormProps> = ({ data, onChange, onOpenAiHelp })
               case RelationType.GRANDFATHER: expected = `현조고${student}${bugun}${suffix}`; break;
               case RelationType.GREAT_GRANDFATHER: expected = `현증조고${student}${bugun}${suffix}`; break;
               case RelationType.GREAT_GREAT_GRANDFATHER: expected = `현고조고${student}${bugun}${suffix}`; break;
+              case RelationType.HUSBAND: expected = `현벽${student}${bugun}${suffix}`; break;
               default: return false;
           }
           return text === expected;
@@ -261,7 +262,12 @@ const JibangForm: React.FC<JibangFormProps> = ({ data, onChange, onOpenAiHelp })
 
       // Helper to check if text matches default child format
       const isDefaultChild = () => {
-          return targetRel === RelationType.SON || targetRel === RelationType.DAUGHTER;
+          if (targetRel !== RelationType.SON && targetRel !== RelationType.DAUGHTER) return false;
+          const prefix = targetRel === RelationType.SON ? '망자' : '망녀';
+          const title = targetRel === RelationType.SON ? '학생' : '수재';
+          const name = stripParens(nameInput || 'O');
+          const expected = `${prefix}${title}${name}지령`;
+          return text === expected;
       };
 
       if (isDefaultMale()) {
@@ -321,13 +327,39 @@ const JibangForm: React.FC<JibangFormProps> = ({ data, onChange, onOpenAiHelp })
 
           // Helper to check if text matches default child format
           const isDefaultChild = () => {
-              return targetRel === RelationType.SON || targetRel === RelationType.DAUGHTER;
+              if (targetRel !== RelationType.SON && targetRel !== RelationType.DAUGHTER) return false;
+              const prefix = targetRel === RelationType.SON ? '망자' : '망녀';
+              const title = targetRel === RelationType.SON ? '학생' : '수재';
+              const name = stripParens(nameInput || 'O');
+              const expected = `${prefix}${title}${name}지령`;
+              return text === expected;
+          };
+
+          // Helper to check if text matches default female format
+          const isDefaultFemale = () => {
+              const prefix = getFemalePrefix(targetRel);
+              const suffix = JIBANG_CONSTANTS.SUFFIX;
+              const clan = stripParens(clanInput || 'OO');
+              const fam = stripParens(nameInput || 'O');
+              const expected = `${prefix}${clan}${fam}씨${suffix}`;
+              return text === expected;
           };
 
           if (isDefaultMale()) {
               return FIXED_HANJA_TEMPLATES[targetRel];
           }
           
+          if (isDefaultFemale()) {
+              const template = FIXED_HANJA_TEMPLATES[targetRel];
+              if (!clanInput || !nameInput) return await convertJibangToHanja(text);
+              
+              const bonGwanData = await getBonGwanHanja(nameInput, clanInput);
+              const clanHanja = bonGwanData.hanja_bon_gwan || 'OO';
+              const familyHanja = bonGwanData.hanja_surname || 'O';
+              
+              return template.replace('{CLAN}', clanHanja).replace('{SURNAME}', familyHanja);
+          }
+
           if (isDefaultChild()) {
               const template = FIXED_HANJA_TEMPLATES[targetRel];
               if (!nameInput) return await convertJibangToHanja(text);

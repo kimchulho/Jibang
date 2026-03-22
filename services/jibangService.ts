@@ -3,13 +3,16 @@ import { getBonGwanHanjaFromAI } from './aiService';
 import { BonGwan, JibangHistory } from '../types';
 
 export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promise<BonGwan> => {
+  const cleanSurname = surname.trim();
+  const cleanBonGwan = bon_gwan.trim();
+
   // 1. Search in DB
   try {
     const { data, error } = await supabase
       .from('jibang_surnames')
       .select('*')
-      .eq('surname', surname)
-      .eq('bon_gwan', bon_gwan)
+      .eq('surname', cleanSurname)
+      .eq('bon_gwan', cleanBonGwan)
       .single();
 
     if (data) {
@@ -25,12 +28,12 @@ export const getBonGwanHanja = async (surname: string, bon_gwan: string): Promis
 
   // 2. If not found, use AI
   console.log('BonGwan not found in DB, using AI...');
-  const aiResult = await getBonGwanHanjaFromAI(surname, bon_gwan);
+  const aiResult = await getBonGwanHanjaFromAI(cleanSurname, cleanBonGwan);
 
   // 3. Register in DB
   const newBonGwan: BonGwan = {
-    surname,
-    bon_gwan,
+    surname: cleanSurname,
+    bon_gwan: cleanBonGwan,
     hanja_surname: aiResult.hanja_surname,
     hanja_bon_gwan: aiResult.hanja_bon_gwan,
   };

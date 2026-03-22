@@ -20,7 +20,10 @@ export const getBonGwanHanjaFromAI = async (surname: string, bon_gwan: string): 
 성씨: ${surname}
 본관: ${bon_gwan}
 
-결과는 반드시 JSON 형식으로 반환해주세요.
+주의사항:
+1. 한국에 실제 존재하는 본관과 성씨인지 확인하고, 가장 정확하고 널리 쓰이는 한자를 사용해주세요.
+2. '씨(氏)' 등의 호칭은 제외하고 순수하게 본관과 성씨의 한자만 반환해주세요.
+3. 결과는 반드시 JSON 형식으로 반환해주세요.
 예시: {"hanja_surname": "金", "hanja_bon_gwan": "金海"}
 `;
 
