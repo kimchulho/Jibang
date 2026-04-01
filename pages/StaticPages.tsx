@@ -158,3 +158,48 @@ export const FaqPage: React.FC = () => (
     </div>
   </div>
 );
+
+export const PrivacyPolicyPage: React.FC = () => (
+  <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="text-center space-y-4 mb-12">
+      <h1 className="text-3xl font-bold text-stone-900">개인정보 처리방침</h1>
+    </div>
+    <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 space-y-6 text-stone-600 leading-relaxed">
+      <p>본 서비스는 사용자의 개인정보를 소중하게 생각하며, 관련 법령을 준수합니다.</p>
+      <h2 className="text-xl font-semibold text-stone-800">1. 수집하는 개인정보 항목</h2>
+      <p>본 서비스는 별도의 회원가입 없이 이용 가능하며, 사용자가 직접 입력한 지방 생성 정보 외에 별도의 개인정보를 수집하지 않습니다.</p>
+      <h2 className="text-xl font-semibold text-stone-800">2. 개인정보의 이용 목적</h2>
+      <p>입력하신 정보는 지방 생성 및 인쇄를 위한 목적으로만 사용되며, 서버에 저장되지 않습니다.</p>
+      <h2 className="text-xl font-semibold text-stone-800">3. 개인정보의 보유 및 파기</h2>
+      <p>지방 생성 후 브라우저를 닫으면 입력하신 정보는 즉시 삭제됩니다.</p>
+    </div>
+  </div>
+);
+
+export const ContactPage: React.FC = () => (
+  <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="text-center space-y-4 mb-12">
+      <h1 className="text-3xl font-bold text-stone-900">문의하기</h1>
+    </div>
+    <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 text-center space-y-4">
+      <p className="text-stone-600">서비스 이용 중 불편한 점이나 제안사항이 있으시면 아래 이메일로 연락주세요.</p>
+      <a href="mailto:seeker7263@gmail.com" className="text-emerald-700 font-bold hover:underline">seeker7263@gmail.com</a>
+    </div>
+  </div>
+);
+
+export const JibangHistoryPage: React.FC = () => (
+  <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="text-center space-y-4 mb-12">
+      <h1 className="text-3xl font-bold text-stone-900">지방의 역사와 의미</h1>
+    </div>
+    <div className="bg-white p-8 rounded-2xl shadow-sm border border-stone-200 space-y-6 text-stone-600 leading-relaxed">
+      <h2 className="text-xl font-semibold text-stone-800">지방의 기원</h2>
+      <p>지방은 중국 주나라 때부터 시작된 제사 의례에서 유래되었습니다. 신주를 모시기 어려운 환경에서 조상을 기리기 위해 종이에 글을 적어 신주를 대신하게 된 것이 시초입니다.</p>
+      <h2 className="text-xl font-semibold text-stone-800">한국에서의 지방</h2>
+      <p>한국에서는 조선시대부터 유교 문화가 정착되면서 지방을 사용하는 문화가 일반화되었습니다. 특히 사당을 갖추지 못한 일반 가정에서 조상을 모시는 가장 중요한 방법으로 자리 잡았습니다.</p>
+    </div>
+  </div>
+);
+
+

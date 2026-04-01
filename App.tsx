@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon, HomeIcon, BookOpenIcon, QuestionMarkCircleIcon, DocumentTextIcon, ShareIcon } from '@heroicons/react/24/outline';
 import JibangGenerator from './components/JibangGenerator';
-import { AboutPage, GuidePage, FaqPage } from './pages/StaticPages';
+import { AboutPage, GuidePage, FaqPage, PrivacyPolicyPage, ContactPage, JibangHistoryPage } from './pages/StaticPages';
 
 const AppContent: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,6 +57,9 @@ const AppContent: React.FC = () => {
             <Link to="/about" className={`px-4 py-2 rounded-lg text-sm transition-colors ${isActive('/about')}`}>
                지방이란?
             </Link>
+            <Link to="/history" className={`px-4 py-2 rounded-lg text-sm transition-colors ${isActive('/history')}`}>
+               지방의 역사
+            </Link>
             <Link to="/guide" className={`px-4 py-2 rounded-lg text-sm transition-colors ${isActive('/guide')}`}>
                작성법 가이드
             </Link>
@@ -102,6 +105,14 @@ const AppContent: React.FC = () => {
                 지방이란?
               </Link>
               <Link 
+                to="/history" 
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm ${isActive('/history')}`}
+                onClick={closeMenu}
+              >
+                <BookOpenIcon className="w-5 h-5" />
+                지방의 역사
+              </Link>
+              <Link 
                 to="/guide" 
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm ${isActive('/guide')}`}
                 onClick={closeMenu}
@@ -139,6 +150,9 @@ const AppContent: React.FC = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/history" element={<JibangHistoryPage />} />
         </Routes>
       </main>
 
@@ -150,6 +164,12 @@ const AppContent: React.FC = () => {
                 祭
              </div>
              지방앱
+           </div>
+           
+           <div className="flex items-center gap-4 text-xs text-stone-500">
+             <Link to="/privacy" className="hover:text-stone-900">개인정보 처리방침</Link>
+             <span className="text-stone-300">|</span>
+             <Link to="/contact" className="hover:text-stone-900">문의하기</Link>
            </div>
 
            <p className="text-xs text-stone-400">
