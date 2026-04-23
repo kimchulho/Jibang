@@ -7,7 +7,6 @@ import { RELATION_HANJA } from '../constants';
 import { saveJibangHistory, getClientIp, getTotalJibangCount } from '../services/jibangService';
 import JibangForm from './JibangForm';
 import JibangPreview from './JibangPreview';
-import AiModal from './AiModal';
 import AdModal from './AdModal';
 import { ArrowDownTrayIcon, CheckCircleIcon, PhotoIcon, PrinterIcon } from '@heroicons/react/24/solid';
 
@@ -37,7 +36,6 @@ const JibangGenerator: React.FC = () => {
   
   const [activeSlotIndex, setActiveSlotIndex] = useState(0);
   
-  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<'PDF' | 'IMAGE' | 'PRINT' | null>(null);
 
@@ -466,7 +464,6 @@ const JibangGenerator: React.FC = () => {
                 <JibangForm 
                     data={slots[activeSlotIndex]} 
                     onChange={handleSlotChange} 
-                    onOpenAiHelp={() => setIsAiModalOpen(true)}
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 px-4 bg-stone-50 rounded-xl border border-stone-100 border-dashed text-stone-400">
@@ -615,8 +612,6 @@ const JibangGenerator: React.FC = () => {
           
       </div>
 
-      <AiModal isOpen={isAiModalOpen} onClose={() => setIsAiModalOpen(false)} />
-      
       <AdModal 
         isOpen={isAdModalOpen} 
         onClose={() => setIsAdModalOpen(false)} 

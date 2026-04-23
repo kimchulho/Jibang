@@ -56,12 +56,6 @@ export interface HanjaMap {
   [key: string]: string;
 }
 
-export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
-  isError?: boolean;
-}
-
 export interface BonGwan {
   id?: number;
   surname: string;

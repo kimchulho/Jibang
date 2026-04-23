@@ -4,15 +4,14 @@ import { RELATION_HANJA, JIBANG_CONSTANTS, FIXED_HANJA_TEMPLATES } from '../cons
 import { convertJibangToHanja, convertToHanja } from '../services/geminiService';
 import { getBonGwanHanja } from '../services/jibangService';
 import { supabase } from '../services/supabaseClient';
-import { ArrowPathIcon, SparklesIcon, PlusCircleIcon, MinusCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, PlusCircleIcon, MinusCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface JibangFormProps {
   data: JibangData;
   onChange: (data: JibangData) => void;
-  onOpenAiHelp: () => void;
 }
 
-const JibangForm: React.FC<JibangFormProps> = ({ data, onChange, onOpenAiHelp }) => {
+const JibangForm: React.FC<JibangFormProps> = ({ data, onChange }) => {
   const relationInfo = RELATION_HANJA[data.relation];
   const isFemale = relationInfo.gender === 'F';
   const isCouple = relationInfo.gender === 'COUPLE';
@@ -677,17 +676,6 @@ const JibangForm: React.FC<JibangFormProps> = ({ data, onChange, onOpenAiHelp })
               )}
           </div>
 
-      </div>
-
-      {/* AI Assistant Trigger */}
-      <div className="pt-4 border-t border-stone-200">
-        <button
-            onClick={onOpenAiHelp}
-            className="w-full flex items-center justify-center gap-2 py-2 text-stone-500 hover:text-stone-800 transition-colors"
-        >
-            <SparklesIcon className="w-4 h-4" />
-            <span className="text-xs">작성법이나 한자가 궁금하신가요? (AI 채팅)</span>
-        </button>
       </div>
     </div>
   );
