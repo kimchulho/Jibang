@@ -173,7 +173,7 @@ const AppContent: React.FC = () => {
            </div>
 
            <p className="text-xs text-stone-400">
-             © 2024 Jibang App. All rights reserved.
+             © 2026 Jibang App. All rights reserved.
            </p>
         </div>
       </footer>
